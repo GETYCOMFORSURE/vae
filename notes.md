@@ -14,11 +14,11 @@ Generative models can make brand-new random outputs, but often you want to **exp
 - Trained via **reconstruction loss** (MSE or cross-entropy between output and input)
 - Encoder is forced to discard unimportant info, keep only what's needed to reconstruct
 
-### The problem
+**The problem**
 - The latent space learned this way is **not continuous** — it forms disconnected clusters
 - Fine for reconstructing known inputs, but bad for generation: sampling a random point between clusters → decoder has never seen that region → garbage output
 
-### What VAEs change
+### What Variational Autoencoders (VAEs) change
 - Encoder outputs **two vectors** instead of one encoding: a mean vector **μ** and a std-dev vector **σ**
 - These define a distribution per input; the actual encoding is **sampled** from N(μ, σ²)
 - Same input → slightly different encoding every pass (stochastic)
