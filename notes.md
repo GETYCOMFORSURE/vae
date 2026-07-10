@@ -13,7 +13,6 @@ some notes jotted down during coding
 
 ## 1. data loader
 ### resources:
-- [MNIST documentation](https://docs.pytorch.org/vision/main/generated/torchvision.datasets.MNIST.html)
 
 ### recall: method, function, attribute, argument
 - method - a type of function
@@ -40,6 +39,7 @@ git push
 - Feed data to the model in small groups, not all at once (**batch**) — memory can't hold the whole dataset at once, and the model updates its weights after each small batch (not once per epoch), giving many fast, stable updates instead of one huge slow one
 
 ### explain data loader decisions
+- [MNIST documentation](https://docs.pytorch.org/vision/main/generated/torchvision.datasets.MNIST.html)
 ```python
 data = datasets.MNIST(
     root='./data', 
@@ -75,3 +75,5 @@ plt.imshow(image.squeeze(), cmap='gray')
 plt.title(f'Label: {label}')
 plt.show()
 ```
+### take a glimpse of items in DataLoader
+- [PyTorch DataLoader documentation](https://docs.pytorch.org/docs/2.13/data.html): DataLoader is iterable
