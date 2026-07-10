@@ -94,3 +94,7 @@ plt.show()
 ## 2. model
 ### encoder
 -> basically a MLP but output two vectors (mean + standard deviation)
+
+### fun fact (my own opinion)
+- Senior engineer = fast pattern-matching across many solved problems (horizontal).
+- Senior researcher = knowing exactly where a deep field's unsolved edge sits and pushing past it (vertical).
