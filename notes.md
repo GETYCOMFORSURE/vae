@@ -48,14 +48,12 @@ data = datasets.MNIST(
     download=True, 
     transform=transform.ToTensor())
 ```
-- `root='./data'` — creates a local `data` folder to store the downloaded files; standard convention, keeps files self-contained in the project, add `data/` to `.gitignore` so it doesn't get committed
-- `train=True/False` — MNIST comes pre-split: `True` = 60k training images, `False` = 10k test images (file `t10k-images-idx3-ubyte`, "t10k" = "test 10k"). No manual split step needed, unlike the cancer dataset.
-- `transform=transforms.ToTensor()` — raw data loads as a **PIL Image** (Python Imaging Library format — has width/height/mode, but PyTorch layers can't consume it directly). `ToTensor()` converts PIL → tensor and does two things at once:
-  1. Reshapes `(H, W, C)` → PyTorch's expected `(C, H, W)`
-  2. Rescales pixel values from `0–255` ints → `0.0–1.0` floats
-  → because of step 2, **no separate normalization step is needed for MNIST** (unlike the cancer dataset, where features had wildly different scales and needed manual normalizing)
-- `download=True` — downloads the dataset if not already present in `root`; must be `True` on first run in a fresh environment (e.g. new Colab session), or you'll hit `RuntimeError: Dataset not found`
-- Storage is environment-dependent: Colab's `./data` lives at `/content/data/` and is wiped when the runtime resets; Codespaces persists across sessions until the codespace itself is deleted; a `.py` file just sitting in a repo, unexecuted, creates nothing
+- `root='./data'` — creates a folder called `data`
+- `train=True` — True/False corresponds to 60k / 10k images. Use more data (60k) to train, less (10k) to test.
+- `transform=transforms.ToTensor()` — data loads as PIL (python imaging library), but PyTorch only works with tensors, so transform to tensor
+  - reshapes PIL's (H, W, C) → PyTorch's (C, H, W)
+  - rescales 0-255 ints → 0.0-1.0 floats → no need to normalize anymore
+- `download=True` — puts it in root directory (data folder)
 
 ### data structure returned by the dataset
 - indexing returns a tuple: `(image, target)` according to the documentation
