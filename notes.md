@@ -22,6 +22,7 @@ some notes jotted down during coding
 ```python
 object.attribute # eg. print(dog1.name)
 list[attribute]
+
 object.method(argument)
 list.method(argument)
 ```
