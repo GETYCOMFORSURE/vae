@@ -76,4 +76,15 @@ plt.title(f'Label: {label}')
 plt.show()
 ```
 ### take a glimpse of items in DataLoader
-- [PyTorch DataLoader documentation](https://docs.pytorch.org/docs/2.13/data.html): DataLoader is iterable
+- [PyTorch DataLoader documentation](https://docs.pytorch.org/docs/stable/data.html): DataLoader is **iterable**, not indexable
+- source shows internally it's built with `yield` (it hands you one batch at a time, only when you ask — via a `for` loop, or via `next(iter(...))`) — confirms: get items by iterating, not indexing
+```python
+images, labels = next(iter(train_loader))  # grabs the first batch
+image = images[0]   # tensor IS indexable, unlike the loader
+label = labels[0]
+plt.imshow(image.squeeze(), cmap='gray')
+plt.title(f'Label: {label}')
+plt.show()
+```
+- `iter(train_loader)` — turns it into an iterator
+- `next(...)` — pulls the first yielded batch
