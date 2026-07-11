@@ -2,7 +2,7 @@
 some notes jotted down during coding
 
 ## divde the components
-### components in any ML pipeline (near-universal, especially in PyTorch)
+### components in any ML workflow (near-universal, especially in PyTorch)
 1. Data loader — get data in, clean, ready to feed
 2. Model — define the architecture (what transforms input → output)
 3. Loss function — define what "wrong" means, numerically
@@ -12,6 +12,11 @@ some notes jotted down during coding
 
 5. Evaluation — check performance on held-out data / sanity-check outputs (e.g. do generated digits actually look real, not just "loss went down")
 6. Inference/deployment — use the trained model on new data, only needed if packaging for others to use
+
+
+in other words: 
+- workflow: encoder → sampler → decoder → compute loss → optimizer updates weights → repeat for next batch
+- one pass through (encoder→sampler→decoder→loss→optimizer update) = one training step (or one batch/iteration)
 
 ## 1. data loader
 
