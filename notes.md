@@ -116,3 +116,14 @@ resources:
 ### fun fact (my own opinion)
 - Senior engineer = fast pattern-matching across many solved problems (horizontal).
 - Senior researcher = knowing exactly where a deep field's unsolved edge sits and pushing past it (vertical).
+
+### sampler
+
+**where does it go — before or after μ, σ?**
+- sampler = draw one random point near μ, spread by σ. `z = μ + σ·ε`, `ε ~ N(0,1)`
+- so sampler goes after
+
+**what's latent dimension**
+- = number of the degree of freedom of one image -> label, thickness, style, etc -> so 1 dimension can't hold all of it
+- no need to hand-assign what each dimension represents, because this is unsupervised learning (network finds its own factorization by minimizing loss)
+- picked: latent_dim = 10
