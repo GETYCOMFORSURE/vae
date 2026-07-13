@@ -18,7 +18,7 @@ in other words:
 - workflow: encoder → sampler → decoder → compute loss → optimizer updates weights → repeat for next batch
 - one pass through (encoder→sampler→decoder→loss→optimizer update) = one training step (or one batch/iteration)
 
-## 1. data loader
+## 1. vae - data loader
 
 ### recall: method, function, attribute, argument
 - method - a type of function
@@ -96,7 +96,7 @@ plt.show()
 - `iter(train_loader)` — turns it into an iterator
 - `next(...)` — pulls the first yielded batch
 
-## 2. model
+## 2. vae - model
 ### encoder
 -> basically a MLP but output two outputs (mean + standard deviation)
 
@@ -148,3 +148,6 @@ resources:
 - MNIST pixels normalized to 0-1
 - plain `Linear` can output any real number
 - sigmoid squashes to [0,1] — not for "binary," for range-matching
+
+## 1. gan - data loader
+normalization is needed in the transform. GANs conventionally use Tanh as the generator's final activation instead of sigmoid, so VAE will normalize in sigmoid step whereas GAN has to have normalization separately.
