@@ -186,7 +186,43 @@ generator_optim     = torch.optim.Adam(generator.parameters(),     lr=0.0002, be
 - Defaults: `Adam(params, lr=0.001, betas=(0.9, 0.999), eps=1e-8, weight_decay=0)`
 - **GAN overrides:** `lr=0.0002` (0.001 destabilises) and `betas=(0.5, 0.999)` — lower first beta = less momentum. Momentum assumes a stable loss landscape; in a GAN your opponent is also learning, so the landscape moves under you.
 
-## 4. gan - training loop
+## 4. training loop
+
+### the two nested loops
+- 60000 ÷ 32 = 1875 **batches**; one full pass over all of them = **1 epoch**.
+- **Why 100 epochs on the same data?** Each pass = ~1875 tiny nudges per weight. A net doesn't learn from one exposure any more than I learn a paper from one read. Each pass starts from better weights than the last.
+- `for images, _ in train_loader` — `_` discards MNIST's digit labels (GAN is unsupervised).
+- **`.view(images.size(0), -1)`** flattens `[32,1,28,28]` → `[32,784]` for `nn.Linear(784,…)`. Same numbers, new shape.
+  - `.size(0)` reads the batch size off the tensor — don't hardcode 32, the last batch may be smaller.
+  - **`-1` = "solve for this."** `.view()` is a constraint equation: total elements fixed, one unknown → solvable. Only one `-1` allowed.
+
+### the four-line rhythm — universal, not a GAN thing
+`zero_grad → loss → backward → step`
+- **`zero_grad()`** — PyTorch *accumulates* gradients; every `backward()` **adds** to what's stored. Without wiping, batch 2's gradient = batch1 + batch2, forever.
+- **`backward()`** — autograd recorded every op from input → loss; this walks it back (chain rule) and writes each weight's contribution into `param.grad`. **Only measures — nothing has moved.**
+- **`step()`** — optimizer reads those `.grad`s and updates the weights. *This* is where learning happens.
+- Maps to my NumPy MLP: `backward()` ≈ my `backward(...)` returning `dW1,db1…` · `step()` ≈ my `update_params(...)` · `zero_grad()` ≈ nothing (I never accumulated).
+
+### the setup lines
+- `torch.randn / ones / zeros` all take a **SHAPE**, not distribution params. `randn(0,1)` is an *empty tensor*, not N(0,1) — `randn` is always standard normal. (Got this wrong twice.)
+- Labels shaped `[batch, 1]` — D outputs one number per image. These are **BCE targets**, not MNIST's digit labels.
+- `images` = the 32 real digits. `fakes` = the 32 images G just made from noise.
+
+### phase 1 — train D
+- **`criterion(prediction, target)`**: prediction = what D *actually said* (`discriminator(images)`); target = what it *should* have said (the labels). Loss = the gap.
+- D must see **both** classes. Train it only on fakes and it could output 0 for everything and score perfectly.
+- Add the two losses: `backward()` needs one scalar, and grad of a sum = sum of the grads, so both signals reach D.
+
+### phase 2 — train G
+- **The line that confused me:** `criterion(discriminator(fakes), real_labels)`. G's output is an *image* — you can't BCE an image against a label. The only thing outputting a number in [0,1] is **D's sigmoid**. So prediction = D's verdict on the fakes; target = the lie, 1.
+  - Read it: *"D said this about my fakes; I wish it had said 'real'; the gap is my loss."*
+  - **Where's `generator()` in that line?** Nowhere — it already ran. Autograd knows `fakes` came from G, so the gradient flows loss → through D → into `fakes` → into G's weights. **G is judged on work it already did.**
+- **Regenerate `fakes` in phase 2.** `d_loss.backward()` frees the graph that made them → reusing gives `RuntimeError: backward through the graph a second time`. (Tutorials often use `.detach()` in phase 1 instead — same problem, other end.)
+
+### why D isn't corrupted in phase 2
+`g_loss.backward()` *does* fill gradients on D's weights (the gradient must pass through D to reach G). But `generator_optim.step()` only iterates `generator.parameters()` — **D's `.grad`s are never read**, then wiped by the next `zero_grad()`.
+→ **That's why PyTorch needs no "trainable/non-trainable" flag** (unlike the Keras version in my notes). The optimizer's parameter list *is* the flag.
+
  
 ### `.detach()` — recurring bug
 ```python
