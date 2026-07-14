@@ -2,6 +2,17 @@
 
 Two generative models, same dataset, built in PyTorch — then compared on the two things that actually differ: sample quality and training stability.
 
+## Structure
+
+```
+vae.py        # encoder → μ, σ → reparameterised sample → decoder
+gan.py        # generator + discriminator, two optimizers, alternating updates
+results.md    # the comparison: samples, loss curves, why
+notes.md      # implementation notes
+learning.md   # concept notes
+plan.md
+```
+
 ## Results
 
 | | VAE | GAN |
@@ -18,16 +29,6 @@ Two generative models, same dataset, built in PyTorch — then compared on the t
 
 Full write-up: [`results.md`](results.md)
 
-## Structure
-
-```
-vae.py        # encoder → μ, σ → reparameterised sample → decoder
-gan.py        # generator + discriminator, two optimizers, alternating updates
-results.md    # the comparison: samples, loss curves, why
-notes.md      # implementation notes
-learning.md   # concept notes
-plan.md
-```
 ## Stack
 
 Python, PyTorch, MNIST via torchvision.
