@@ -5,12 +5,12 @@ Two generative models, same dataset, built in PyTorch — then compared on the t
 ## Structure
 
 ```
+plan.md
+learning.md   # concept notes
+notes.md      # implementation notes
 vae.py        # encoder → μ, σ → reparameterised sample → decoder
 gan.py        # generator + discriminator, two optimizers, alternating updates
 results.md    # the comparison: samples, loss curves, why
-notes.md      # implementation notes
-learning.md   # concept notes
-plan.md
 ```
 
 ## Results
