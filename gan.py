@@ -100,3 +100,25 @@ for epoch in range(100):
     if epoch % 10 == 0 or epoch == 99:
         print(f"Epoch {epoch}, D_loss: {d_loss.item():.4f}, "
               f"G_loss: {g_loss.item():.4f}")
+
+
+
+# 5. evaluation
+generator.eval()
+with torch.no_grad():
+    noise = torch.randn(3, latent_dim)
+    fakes = generator(noise).view(-1, 1, 28, 28)
+    fakes = fakes * 0.5 + 0.5  # un-normalize [-1,1] -> [0,1], remember from data loader notes
+
+real_images, _ = next(iter(test_loader))
+real_sample = real_images[:3]
+
+fig, axes = plt.subplots(2, 3, figsize=(6, 4))
+for i in range(3):
+    axes[0, i].imshow(fakes[i].squeeze(), cmap='gray')
+    axes[0, i].set_title("fake")
+    axes[1, i].imshow(real_sample[i].squeeze() * 0.5 + 0.5, cmap='gray')
+    axes[1, i].set_title("real")
+    axes[0, i].axis('off')
+    axes[1, i].axis('off')
+plt.show()
