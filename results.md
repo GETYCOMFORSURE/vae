@@ -48,6 +48,8 @@
 | 90 | 0.9009 | 1.8837 |
 | 99 | 0.9974 | 1.3613 |
 
+<img width="601" height="385" alt="Screenshot 2026-07-14 at 17 52 30" src="https://github.com/user-attachments/assets/83bca8fd-7d16-4c9f-83dc-7ad9fb71050a" />
+
 - VAE loss is **monotonic**: 146 → 106 over 100 epochs, no epoch where loss 
   increases from the last. Single loss, single optimizer, encoder+decoder 
   cooperate on one objective — nothing fights the descent.
